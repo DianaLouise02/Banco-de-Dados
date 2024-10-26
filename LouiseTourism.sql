@@ -61,20 +61,72 @@ CREATE TABLE destino (
   ('Otávio', 'otavio@email.com', '9658741','Rua das Bandeiras, 751');
   
   INSERT INTO pacote (id_destino,nome, preco, datainicio, datatermino) VALUES
-   (1 , 'Terras britânicas', 80.000, "2025/10/09",  "2025/11/10"),
-   (2 , 'Europa Renascentista', 90.000, "2025/08/12", "2025/09/12"),
-   (3 , 'Ásia Tecnológica', 85.000, "2025/08/12",  "2025/09/04"),
-   (4 , 'Um pouco de Hollywood', 96.000, "2025/07/10",  "2025/08/10"),
-   (5 , 'História coreana', 60.000, "2025/07/11",  "2025/08/12"),
-   (6 , 'New York: A cidade que nunca dorme', 98.000, "2025/08/11", "2025/09/12");
+   (1 , 'Terras britânicas', 80000.00 '2025-10-09', '2025-11-10'),
+   (2 , 'Europa Renascentista', 90000.00, '2025-08-12', '2025-09-12'),
+   (3 , 'Ásia Tecnológica', 85000.00,'2025-08-12', '2025-09-04'),
+   (4 , 'Um pouco de Hollywood', 96000.00, '2025-07-10', '2025-08-10'),
+   (5 , 'História coreana', 60000.00, '2025-07-11', '2025-08-12'),
+   (6 , 'New York: A cidade que nunca dorme', 98000.00, '2025-08-11', '2025-09-12');
    
 INSERT INTO reserva (id_cliente, id_pacote, datareserva, pessoas, statusreserva) VALUES
- (1,5, "2025/06/04",250, 'confirmada'),
- (9,4, "2025/06/02",250, 'pendente'),
- (3,1, "2025/08/05",230, 'cancelada'),
- (5,2, "2025/08/01",240, 'cancelada'),
- (2,6, "2025/06/05",220, 'pendente'),
- (4,3, "2025/15/07",220, 'confirmada'),
- (6,3, "2025/07/02" ,260, 'confirmada'),
- (8,5, "2025/15/01",250, 'pendente'),
- (7,1, "2025/10/08",230, 'cancelada');
+ (1,5, '2025-06-04',250, 'Confirmada'),
+ (9,4,'2025-06-02',250, 'Pendente'),
+ (3,1,'2025-08-05' ,230, 'Cancelada'),
+ (5,2, '2025-08-01',240, 'Cancelada'),
+ (2,6,'2025-06-05', 220, 'Pendente')
+ (4,3,'2025-07-15',220, 'Confirmada'),
+ (6,3,'2025-07-02' ,260, 'Confirmada'),
+ (8,5,'2025-01-15',250, 'Pendente'),
+ (7,1,'2025-08-10',230, 'Cancelada');
+
+-- View Pacote -> Destino
+SELECT id_destino, destino.nome FROM pacote
+INNER JOIN destino ON pacote.id_destino= destino.id;
+
+CREATE VIEW visualizar_pacotes_destinos AS
+SELECT id_destino, destino.nome FROM pacote
+INNER JOIN destino ON pacote.id_destino = destino.id;
+
+SELECT * FROM visualizar_pacotes_destinos;
+
+
+-- View Reserva -> Cliente
+SELECT cliente.nome AS nomeCliente,reserva.datareserva AS DataReserva, reserva.pessoas AS quantidadePessoas, reserva.statusreserva AS statusReserva
+FROM  reserva 
+INNER JOIN cliente  ON reserva.id_cliente = cliente.id;
+
+CREATE VIEW visualizar_reservas_clientes AS
+SELECT  cliente.nome AS nomeCliente,reserva.datareserva AS DataReserva, reserva.pessoas AS quantidadePessoas, reserva.statusreserva AS statusReserva
+FROM  reserva 
+INNER JOIN cliente  ON reserva.id_cliente = cliente.id;
+
+SELECT * FROM visualizar_reservas_clientes;
+
+-- View Pacote -> Reserva
+
+SELECT pacote.nome AS nomePacote, reserva.datareserva AS dataReserva, reserva.statusreserva AS statusReserva
+FROM pacote 
+INNER JOIN  reserva ON pacote.id = reserva.id_pacote;
+
+CREATE VIEW visualizar_pacotes_reservas AS
+SELECT pacote.nome AS nomePacote, reserva.datareserva AS dataReserva, reserva.statusreserva AS statusReserva
+FROM pacote 
+INNER JOIN  reserva ON pacote.id = reserva.id_pacote;
+   
+
+SELECT * FROM visualizar_pacotes_reservas;
+
+-- View Cliente -> Pacote -> Reserva
+
+SELECT cliente.nome AS nomeCliente, pacote.nome AS nomePacote, reserva.datareserva
+FROM  reserva 
+INNER JOIN  cliente ON reserva.id_cliente = cliente.id
+INNER JOIN pacote ON reserva.id_pacote = pacote.id;
+
+CREATE VIEW visualizar_clientes_pacotes_reservados AS
+SELECT cliente.nome AS nomeCliente, pacote.nome AS nomePacote, reserva.datareserva
+FROM  reserva 
+INNER JOIN  cliente ON reserva.id_cliente = cliente.id
+INNER JOIN pacote ON reserva.id_pacote = pacote.id;
+
+SELECT * FROM visualizar_clientes_pacotes_reservados;
